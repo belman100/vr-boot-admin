@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Models\AttractionPointModel;
+use App\Models\AttractionCountViewModel;
 
 class PreviewController extends BaseController
 {
@@ -28,7 +29,8 @@ class PreviewController extends BaseController
         //get data from database mongo
         $data = $attraction->getOne($attraction->collection,['_id' => new \MongoDB\BSON\ObjectId($id)]);
         //check if data is null
-        if ($data) {
+        if ($data) { 
+
             //return json
             return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'success', 'point' => $data]));
         }else{

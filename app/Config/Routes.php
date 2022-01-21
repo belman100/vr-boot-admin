@@ -35,6 +35,14 @@ $routes->get('/', 'AdminUserController::index');
 
 $routes->get('/preview/(:segment)', 'PreviewController::index/$1');
 $routes->get('/get-preview/(:segment)', 'PreviewController::getPointData/$1/$2');
+$routes->get('/preview-attraction-count/(:segment)', 'AttractionController::countAttractionView/$1');
+
+//news
+$routes->get('/preview-news/(:segment)', 'NewsController::previewNewsView/$1');
+$routes->get('/get-preview-news-public/(:segment)', 'NewsController::getNewsByDateTimeStartEndValid/$1');
+$routes->get('/preview-video/(:segment)', 'NewsController::previewVideoView/$1');
+$routes->get('/preview-news-details/(:segment)', 'NewsController::previewNewsDetailsView/$1');
+$routes->get('/get-select-news/(:segment)', 'NewsController::getNewsDetailsByIdPublic/$1');
 
 $routes->group("admin", function($routes){
     $routes->get('/', 'AdminUserController::index');
@@ -65,6 +73,7 @@ $routes->group("admin", function($routes){
     $routes->get('get-select-attraction/(:segment)', 'AttractionController::getSelectAttraction/$1');
     $routes->get('get-count-attraction-and-point', 'AttractionController::getCountAttractionAndPont');
     $routes->get('get-count-attraction-and-point-by-type/(:segment)', 'AttractionController::getCountAttractionAndPontWithType/$1');
+    $routes->get('get-attraction-view-all/(:segment)', 'AttractionController::getAttractionViewCountAll/$1');
     //route point vr
     $routes->get('add-point-vr', 'AttractionPointController::setAttractionPoint');
     $routes->post('add-point-vr-post', 'AttractionPointController::setAttractionPointPost');
@@ -73,6 +82,15 @@ $routes->group("admin", function($routes){
     $routes->get('delete-point-vr/(:segment)', 'AttractionPointController::deleteAttractionPoint/$1');
     $routes->get('get-all-point-vr-by-att-id/(:segment)', 'AttractionPointController::getAllAttractionPointByAttrId/$1');
     $routes->get('get-select-point-vr-by-id/(:segment)', 'AttractionPointController::getSelectAttractionPointById/$1');
+    //route news
+    $routes->get('add-news', 'NewsController::addNewsView');
+    $routes->post('add-news-post', 'NewsController::addNewsPost');
+    $routes->get('get-all-news/(:segment)', 'NewsController::getAllNews/$1');
+    $routes->get('get-select-news/(:segment)', 'NewsController::getNewsById/$1');
+    $routes->get('view-news/(:segment)', 'NewsController::viewNewsView/$1');
+    $routes->get('edit-news', 'NewsController::editNewsView');
+    $routes->post('edit-news-post', 'NewsController::editNewsPost');
+    $routes->get('delete-news/(:segment)', 'NewsController::deleteNews/$1');
 });
 
 /*

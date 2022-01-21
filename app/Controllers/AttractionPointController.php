@@ -93,7 +93,7 @@ class AttractionPointController extends BaseController{
                     mkdir('resource/image/');
                 }               
                 //check image file is exist
-                if($data['image_file_name']!='' && $_FILES["audio_file"]["error"]!=4){
+                if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
                     //write image file from file-input to folder
                     if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$_FILES["image_file"]["name"]))
 	                {

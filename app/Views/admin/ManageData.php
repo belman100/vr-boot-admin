@@ -47,9 +47,14 @@
                         <div class="col-lg-1 responsive-wrap">
                         </div>
                     </div>
-                </div>
-            </div>
-            </div>
+                    <?php echo view('admin/ListPreviewAttractionCount'); ?>
+                    <hr></hr>
+                    <?php echo view('admin/ListNews'); ?>
+                </div>                
+            </div>            
+        </section>
+        
+            
             <!--// SLIDER -->
             <!--//END HEADER -->
             <!--============================= menu =============================-->
@@ -96,9 +101,10 @@
             <?php echo view('admin/include/Footer'); ?>
             <!--//END FOOTER -->        
         <?php echo view('admin/include/FooterJS'); ?>
-        <script src="../asset/js/custom_js/dasbord.js"></script>
+        <script src="../asset/js/custom_js/dasbord.js"></script>        
         <script src="../asset/js/custom_js/content-component.js"></script>
         <script src="../asset/js/custom_js/add-attraction-component.js"></script>       
+        
 
 </body>
 

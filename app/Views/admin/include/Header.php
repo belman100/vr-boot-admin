@@ -5,7 +5,7 @@
     <meta name="author" content="">
     <meta name="keywords" content="#">
 
-    <title>360 VR Destinations Loei Province</title>
+    <title>VR BOOT Loei Province</title>
     <link rel="apple-touch-icon" href="../asset/img/icon_boot_1.png">
     <link rel="shortcut icon" type="image/ico" href="../asset/img/icon_boot_1.png" />
 
@@ -33,7 +33,8 @@
     <!--sweetalert2-->
     <link href="../asset/css/sweetalert2.min.css" rel="stylesheet">
     <script src="../asset/js/sweetalert2.min.js"></script>
-    <!-- vue js -->
-    <script src="https://unpkg.com/vue@next"></script>
+    <!-- vue js -->    
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.27/dist/vue.global.min.js"></script>
+    <!--<script src="https://unpkg.com/vue@next"></script>-->
     <!--- axios -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js" integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

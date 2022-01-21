@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Models\AttractionModel;
 use App\Models\AttractionPointModel;
+use App\Models\AttractionCountViewModel;
 
 class AttractionController extends BaseController{
     public function index(){
@@ -251,6 +252,47 @@ class AttractionController extends BaseController{
         }else{
             return $this->response->setJSON(json_encode(['status' => 401, 'message' => 'Unauthorized']));
         }
+    }
+    //get attraction view count all
+    public function getAttractionViewCountAll($id){
+        $session = session();
+        //check if user is already logged in
+        
+        if (session()->get('is_login')) {
+            $attraction = new AttractionModel();
+            $attractionData = $attraction->getList($attraction->collection,['type_id' => new \MongoDB\BSON\ObjectId($id)]);
+            $attractionView = new AttractionCountViewModel();
+            $attractionViewData = $attractionView->getList($attractionView->collection);
+            $attractionViewCount = [];
+            if(count($attractionData)>0){
+                foreach ($attractionData as $key => $value) {
+                    $attractionViewCount[$key]['attr_id'] = $value['_id'];
+                    $attractionViewCount[$key]['attr_name'] = $value['attr_name'];
+                    $attractionViewCount[$key]['attr_view_count'] = 0;
+                    foreach ($attractionViewData as $keyView => $valueView) {
+                        if($value['_id'] == $valueView['attraction_id']){
+                            $attractionViewCount[$key]['attr_view_count'] = $attractionViewCount[$key]['attr_view_count'] + 1;
+                        }
+                    }
+                }
+            }
+            //returen json
+            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get success', 'attr_view' => $attractionViewCount]));
+        }else{
+            return $this->response->setJSON(json_encode(['status' => 401, 'message' => 'Unauthorized']));
+        }
+    }
+    //count attraction view
+    public function countAttractionView($id){
+        //get ip address
+        $ip = $this->request->getIPAddress();
+        //get attraction id from attraction point
+        $attraction_id = new \MongoDB\BSON\ObjectId($id);
+        //add ip and attraction id to attraction view database
+        $attraction_view = new AttractionCountViewModel();
+        $attraction_view->createOne($attraction_view->collection,['ip' => $ip, 'attraction_id' => $attraction_id,'created_at' => date('Y-m-d H:i:s')]);
+        //returen json
+        return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get success']));
     }
 }
 ?>
