@@ -169,7 +169,8 @@ class NewsController extends BaseController
         if (session()->get('is_login')) {
             $news = new NewsModel();
             $newsRes=$news->getList($news->collection,['attr_type_id'=>new \MongoDB\BSON\ObjectId($id)],['sort'=>['updated_at'=>-1]]);
-            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get all news success', 'news' => $newsRes]));
+            //$newsRes["date_time_server"] = date('Y-m-d H:i:s');
+            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get all news success','server_date'=>date('Y-m-d H:i:s'), 'news' => $newsRes]));
         }
         else{
             return json_encode(['status' => 400, 'message' => 'You are not logged in']);
@@ -202,7 +203,8 @@ class NewsController extends BaseController
         $newsRes=$news->getList($news->collection,['attr_type_id'=>new \MongoDB\BSON\ObjectId($id),'status'=>true,'date_time_start_valid'=>['$lte'=>date('Y-m-d H:i:s')],'date_time_end_valid'=>['$gte'=>date('Y-m-d H:i:s')]],['sort'=>['updated_at'=>-1]]);
         //check data is exist
         if(!empty($newsRes)){
-            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get news success', 'news' => $newsRes]));
+            //$newsRes["date_time_server"] = date('Y-m-d H:i:s');
+            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get news success','news' => $newsRes]));
         }
         else{
             return $this->response->setJSON(json_encode(['status' => 400, 'message' => 'Get news fail']));
@@ -239,12 +241,57 @@ class NewsController extends BaseController
         $news = new NewsModel();
         $newsRes=$news->getOne($news->collection,['_id'=>new \MongoDB\BSON\ObjectId($id)]);
         //check data is exist
-        if($newsRes){
+        if($newsRes){            
             return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Get news success', 'news' => $newsRes]));
         }
         else{
             return $this->response->setJSON(json_encode(['status' => 400, 'message' => 'Get news fail']));
         }    
+    }
+    //delete news by id and delete image
+    public function deleteNews($id)
+    {
+        $session = session();
+        //check if user is already logged in
+        if (session()->get('is_login')) {
+            //$data = $this->request->getPost();
+            $news = new NewsModel();
+            $newsRes=$news->deleteOne($news->collection,['_id'=>new \MongoDB\BSON\ObjectId($id)]);
+            //check delete success
+            if($newsRes){
+                //delete image
+                $this->deleteImage($id);
+                return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Delete news success']));
+            }
+            else{
+                return $this->response->setJSON(json_encode(['status' => 400, 'message' => 'Delete news fail']));
+            }    
+        }
+        else{
+            return json_encode(['status' => 400, 'message' => 'You are not logged in']);
+        }
+    }
+    //delete image by id
+    public function deleteImage($id)
+    {
+        //$data = $this->request->getPost();
+        $news = new NewsModel();
+        //get news image mongodb
+        $newsRes=$news->getOne($news->collection,['_id'=>new \MongoDB\BSON\ObjectId($id)]);
+        //check data is exist
+        if($newsRes){
+            //$newsRes=$news->getOne($news->collection,['_id'=>new \MongoDB\BSON\ObjectId($id)]);
+            //check data is exist
+            if($newsRes){
+                //delete image
+                $file_name=$newsRes['image_name'];
+                if($file_name){
+                    $file_name = 'resource/image/news/'.$file_name;
+                    if (file_exists($file_name)) {
+                        unlink($file_name);
+                    }
+                }
+            }          
+        }
     }    
-    
 }

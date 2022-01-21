@@ -47,9 +47,7 @@
                         <div class="col-lg-1 responsive-wrap">
                         </div>
                     </div>
-                    <?php echo view('admin/ListPreviewAttractionCount'); ?>
-                    <hr></hr>
-                    <?php echo view('admin/ListNews'); ?>
+                    <?php echo view('admin/ListPreviewAttractionCount'); ?>                    
                 </div>                
             </div>            
         </section>
@@ -97,13 +95,40 @@
                     </div>
                 </div>
             </div>
+            <!--ModaladAdd-youtube-->
+            <div class="modal inmodal fade" id="ModaladAdd-youtube" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header-map1">
+                            <button type="button" class="close" data-dismiss="modal" style="color: #3E8B9B;"><span
+                                    aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        </div>
+                        <div class="ibox-content-hhh">
+                            <div class="form-group">
+                                <h6 class="text-back text-center">อัพเดต url
+                                    video youtube บนหน้า แรก VR</h6>
+                            </div>
+                            <div class="form-group" style="padding: 5px 15px 0px;">
+                                <label class="">youtube</label>
+                                <input type="text" class="form-control form-control-lg form-control-a" placeholder="url video youtube" v-model="video.video_url">
+
+                            </div>
+                            <div class="form-group" style="padding: 5px 15px 0px;">
+                                <button type="button" class="btn btn-primary1 float-right " @click="addEditVideo()">อัพเดตข้อมูล</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--//END FIND PLACES -->
             <?php echo view('admin/include/Footer'); ?>
             <!--//END FOOTER -->        
         <?php echo view('admin/include/FooterJS'); ?>
         <script src="../asset/js/custom_js/dasbord.js"></script>        
         <script src="../asset/js/custom_js/content-component.js"></script>
-        <script src="../asset/js/custom_js/add-attraction-component.js"></script>       
+        <script src="../asset/js/custom_js/add-attraction-component.js"></script>
+        <script src="../asset/js/custom_js/add-edit-video.js"></script>
         
 
 </body>

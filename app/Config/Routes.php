@@ -40,9 +40,10 @@ $routes->get('/preview-attraction-count/(:segment)', 'AttractionController::coun
 //news
 $routes->get('/preview-news/(:segment)', 'NewsController::previewNewsView/$1');
 $routes->get('/get-preview-news-public/(:segment)', 'NewsController::getNewsByDateTimeStartEndValid/$1');
-$routes->get('/preview-video/(:segment)', 'NewsController::previewVideoView/$1');
+$routes->get('/preview-news-video/(:segment)', 'NewsController::previewVideoView/$1');
 $routes->get('/preview-news-details/(:segment)', 'NewsController::previewNewsDetailsView/$1');
 $routes->get('/get-select-news/(:segment)', 'NewsController::getNewsDetailsByIdPublic/$1');
+$routes->get('/get-preview-video/(:segment)', 'VideoController::getVideoNotLogin/$1');
 
 $routes->group("admin", function($routes){
     $routes->get('/', 'AdminUserController::index');
@@ -91,6 +92,8 @@ $routes->group("admin", function($routes){
     $routes->get('edit-news', 'NewsController::editNewsView');
     $routes->post('edit-news-post', 'NewsController::editNewsPost');
     $routes->get('delete-news/(:segment)', 'NewsController::deleteNews/$1');
+    $routes->get('get-video/(:segment)', 'VideoController::getVideo/$1');
+    $routes->post('add-edit-video', 'VideoController::addEditVideo');
 });
 
 /*

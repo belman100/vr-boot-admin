@@ -13,7 +13,7 @@ const previewNewsPublic = {
         getnewsPublic(id) {
             axios.get('../get-preview-news-public/' + id)
                 .then(response => {
-                    //console.log(response.data);
+                    console.log(response.data);
                     //check if response is success
                     if (response.data.status == 200) {
                         this.news = response.data.news;
