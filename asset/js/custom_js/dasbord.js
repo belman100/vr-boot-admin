@@ -67,7 +67,7 @@ const dasbord = {
         getListAttractionCount() {
             let url = '../admin/get-attraction-view-all/' + this.type_id;
             axios.get(url).then(response => {
-                console.log(response);
+                //console.log(response);
                 if (response.data.status == 200) {
                     this.attraction_view = response.data.attr_view;
                     //console.log(this.attraction_view[0].attr_name);

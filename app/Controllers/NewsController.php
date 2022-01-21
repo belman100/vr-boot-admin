@@ -46,6 +46,22 @@ class NewsController extends BaseController
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['status'] = true;
             $data['user_id'] = $session->get('user')->_id;
+            //check foder is exist
+            $data_return='';
+            if(!is_dir('resource/image/news/')){
+                mkdir('resource/image/news/', 0777, true);
+            }               
+            //check image file is exist
+            if($_FILES["image_file"]["error"]!=4){
+                //create new image file name using uniqid
+                $image_file_name = uniqid().'.'.pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION);
+                $data['image_name'] = $image_file_name;
+                //write image file from file-input to folder
+                if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/news/".$image_file_name))
+                {
+                    $data_return.='\nupload image success';
+                }
+            }
             //get data from client
             $newsRes=$news->createOne($news->collection, [
                 'attr_type_id' => new \MongoDB\BSON\ObjectId($data['attr_type_id']),
@@ -60,20 +76,12 @@ class NewsController extends BaseController
                 'status' => $data['status'],
                 'user_id' => $data['user_id']
             ]);
-            //check foder is exist
-            $data_return='';
-            if(!is_dir('resource/image/news/')){
-                mkdir('resource/image/news/', 0777, true);
-            }               
-            //check image file is exist
-            if($_FILES["image_file"]["error"]!=4){
-                //write image file from file-input to folder
-                if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/news/".$_FILES["image_file"]["name"]))
-                {
-                    $data_return.='\nupload image success';
-                }
+            if ($newsRes) {
+                return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Add news success', 'data' => $data_return]));
             }
-            return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Add news success', 'data' => $data_return]));
+            else {
+                return $this->response->setJSON(json_encode(['status' => 400, 'message' => 'Add news fail', 'data' => $data_return]));
+            }   
         }
         else{
             return json_encode(['status' => 400, 'message' => 'You are not logged in']);
@@ -102,6 +110,29 @@ class NewsController extends BaseController
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['status'] = true;
             $data['user_id'] = $session->get('user')->_id;
+            //check foder is exist
+            $data_return='';
+            if(!is_dir('resource/image/news/')){
+                mkdir('resource/image/news/', 0777, true);
+            }               
+            //check image file is exist
+            if(!empty($_FILES["image_file"])){
+                if($_FILES["image_file"]["error"]!=4){
+                    //create new image file name using uniqid
+                    $image_file_name = uniqid().'.'.pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION);
+                    $data['image_name'] = $image_file_name;
+                    //write image file from file-input to folder
+                    if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/news/".$image_file_name))
+                    {
+                        //check old image file is exist
+                        if(file_exists('resource/image/news/'.$data['image_old_name'])){
+                            //delete old image file
+                            unlink('resource/image/news/'.$data['image_old_name']);
+                        }
+                        $data_return.='\nupload image success';
+                    }    
+                }
+            }   
             //get data from client
             $newsRes=$news->updateOne($news->collection, ['_id' => new \MongoDB\BSON\ObjectId($data['_id'])
             ], [    
@@ -118,27 +149,7 @@ class NewsController extends BaseController
             ]);
             //check update success
             if($newsRes){
-                //check foder is exist
-                $data_return='';
-                if(!is_dir('resource/image/news/')){
-                    mkdir('resource/image/news/', 0777, true);
-                }               
-                //check image file is exist
-                if(!empty($_FILES["image_file"])){
-                    if($_FILES["image_file"]["error"]!=4){
-                    
-                        //write image file from file-input to folder
-                        if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/news/".$_FILES["image_file"]["name"]))
-                        {
-                            //check old image file is exist
-                            if(file_exists('resource/image/news/'.$data['image_old_name'])){
-                                //delete old image file
-                                unlink('resource/image/news/'.$data['image_old_name']);
-                            }
-                            $data_return.='\nupload image success';
-                        }    
-                    }
-                }    
+                 
                 return $this->response->setJSON(json_encode(['status' => 200, 'message' => 'Edit news success', 'data' => $data_return]));
             }
             else{

@@ -209,9 +209,13 @@ background: #A6ADB4; }
 
 
 .slider {
-  background: linear-gradient(0deg, rgba(27, 27, 27, 0.3), rgba(0, 0, 0, 0.3)),  url(../img/VR\ MAIN.png) no-repeat;
+  background: linear-gradient(0deg, rgba(27, 27, 27, 0.3), rgba(0, 0, 0, 0.3)),  url(../img/main2.png) no-repeat;
   background-size: cover;
   min-height: 600px; }
+  .slider2 {
+    background: linear-gradient(0deg, rgba(27, 27, 27, 0.3), rgba(0, 0, 0, 0.3)),  url(../img/pics_topic_1855.png) no-repeat;
+    background-size: cover;
+    min-height: 600px; }
 
 .btn-outline-light {
   padding: 10px 16px; }

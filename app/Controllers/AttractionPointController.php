@@ -46,6 +46,40 @@ class AttractionPointController extends BaseController{
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['status'] = true;
             $data['user_id'] = $session->get('user')->_id;
+            //upload file
+            //check foder is exist
+            $data_return='';
+            if(!is_dir('resource/audio/')){
+                mkdir('resource/audio/');
+            }
+            if($data['audio_file_name']!='' && $data['audio_file_base64']!=''){
+                //create new name file with unique
+                $file_name = uniqid().'.mp3';
+                $data['audio_file_name'] = $file_name;
+                //write audio file from base64 to folder
+                $audio_file_name = $this->base64_to_jpeg($data['audio_file_base64'], 'resource/audio/'.$file_name);
+                //var_dump($audio_file_name);
+                //check audio file is exist
+                if(file_exists($audio_file_name)){
+                    //var_dump("Uploaded");
+                    $data_return.="\n upload audio success";
+                }
+            }
+            //image upload
+            if(!is_dir('resource/image/')){
+                mkdir('resource/image/');
+            }               
+            //check image file is exist
+            if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
+                //create new name file with unique
+                $file_name = uniqid().'.'.pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION);
+                $data['image_file_name'] = $file_name;
+                //write image file from file-input to folder
+                if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$file_name))
+                {
+                    $data_return.='\nupload image success';
+                }
+            }
             //insert data to database mongo
             //get point count from database withch attr_id
             //var_dump($data);
@@ -64,43 +98,7 @@ class AttractionPointController extends BaseController{
                     'status' => $data['status'],
                     'user_id' => $data['user_id']
             ])) {
-                //check foder is exist
-                $data_return='';
-                if(!is_dir('resource/audio/')){
-                    mkdir('resource/audio/');
-                }
-                if($data['audio_file_name']!='' && $data['audio_file_base64']!=''){
-                    //write audio file from base64 to folder
-                    $audio_file_name = $this->base64_to_jpeg($data['audio_file_base64'], 'resource/audio/'.$data['audio_file_name']);
-                    //var_dump($audio_file_name);
-                    //check audio file is exist
-                    if(file_exists($audio_file_name)){
-                        //var_dump("Uploaded");
-                        $data_return.="\n upload audio success";
-                    }
-                }
-                /*
-                var_dump($_FILES["image_file"]["name"]);
-                //check audio file is exist
-                if($data['audio_file_name']!='' && $_FILES["audio_file"]["name"]!=4){
-                    if(move_uploaded_file($_FILES["audio_file"]["tmp_name"],"resource/audio/".$_FILES["audio_file"]["name"]))
-	                {
-                        //var_dump("Uploaded");
-		                $data_return.='\nupload audio success';
-	                }
-                }*/
-                if(!is_dir('resource/image/')){
-                    mkdir('resource/image/');
-                }               
-                //check image file is exist
-                if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
-                    //write image file from file-input to folder
-                    if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$_FILES["image_file"]["name"]))
-	                {
-		                $data_return.='\nupload image success';
-	                }
-                }
-                
+                   
                 //returen json
                 return json_encode(['status' => 200, 'message' => 'success',$data_return]);
             }
@@ -127,21 +125,8 @@ class AttractionPointController extends BaseController{
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['status'] = true;
             $data['user_id'] = $session->get('user')->_id;
-            //update data to database mongo
-            //check update success
-            //var_dump($data);
-            if ($attraction->updateOne($attraction->collection,['_id' => new \MongoDB\BSON\ObjectId($data['_id'])],[
-                    'attr_name' => $data['attr_name'],
-                    'attr_id' => new \MongoDB\BSON\ObjectId($data['attr_id']),        
-                    'point_name' => $data['point_name'],
-                    'details' => $data['details'],
-                    'audio_file_name' => $data['audio_file_name'],
-                    'image_file_name' => $data['image_file_name'],
-                    'updated_at' => $data['updated_at'],
-                    'status' => $data['status'],
-                    'user_id' => $data['user_id']
-                ])) {
-                    $dataRerun="";
+            
+            $dataRerun="";
                     //audio file
                     if(!is_dir('resource/audio/')){
                         mkdir('resource/audio/');
@@ -155,52 +140,57 @@ class AttractionPointController extends BaseController{
                         if(file_exists('resource/audio/'.$data['audio_file_name'])){
                             unlink('resource/audio/'.$data['audio_file_name']);
                         }
+                        //create new audio file name using uniqid
+                        $file_name = uniqid().'.mp3';
+                        $data['audio_file_name'] = $file_name;
                         //write audio file from base64 to folder
-                        $audio_file_name = $this->base64_to_jpeg($audio_file_name, 'resource/audio/'.$data['audio_file_name']);
+                        $audio_file_name = $this->base64_to_jpeg($audio_file_name, 'resource/audio/'.$file_name);
                         //var_dump($audio_file_name);
                         //check audio file is exist
                         if(file_exists($audio_file_name)){
                             //var_dump("Uploaded");
                             $dataRerun.="\n upload audio success";
                         }
-                    }
-                    //var_dump($_FILES["audio_file"]);
-                    /*
-                    if($data['audio_file_pre_name']!='' && $_FILES["audio_file"]["name"]==4){
-                        if(!unlink('resource/audio/'.$data['audio_file_pre_name'])){
-                            return json_encode(['status' => 400, 'message' => 'remove old audio file failed!']);
-                        }
                     } 
-                         
-                    //check audio file is exist
-                    if($data['audio_file_name'] !='' && $_FILES["audio_file"]["error"]!=4){    
-                            if(move_uploaded_file($_FILES["audio_file"]["tmp_name"],"resource/audio/".$_FILES["audio_file"]["name"]))
-                            {
-                                $dataRerun.="\n upload audio file success!";
-                            }
-                        
-                    }*/             
-                    //image file
-                    if(!is_dir('resource/image/')){
-                        mkdir('resource/image/');
+            //check image name is exist
+            //image file
+            if(!is_dir('resource/image/')){
+                mkdir('resource/image/');
+            }
+            if($data['image_file_pre_name']!='' && $_FILES["image_file"]["error"]==4){
+                //check old image file is exist
+                if(file_exists('resource/image/'.$data['image_file_pre_name'])){
+                    if(!unlink('resource/image/'.$data['image_file_pre_name'])){
+                        return json_encode(['status' => 400, 'message' => 'remove old image file failed!']);
                     }
-                    if($data['image_file_pre_name']!='' && $_FILES["image_file"]["error"]==4){
-                        //check old image file is exist
-                        if(file_exists('resource/image/'.$data['image_file_pre_name'])){
-                            if(!unlink('resource/image/'.$data['image_file_pre_name'])){
-                                return json_encode(['status' => 400, 'message' => 'remove old image file failed!']);
-                            }
-                        }    
-                    }   
+                }    
+            }
+            //check image file is exist
+            if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
+                //create new image file name using uniqid
+                $image_file_name = uniqid().'.'.pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION);
+                $data['image_file_name'] = $image_file_name;
+                //write image file from file-input to folder
+                if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$image_file_name))
+                {
+                    $dataRerun.="\nupload image file success!";
+                }    
+            }
+
+            //check update success
+            //update data to database mongo
+            if ($attraction->updateOne($attraction->collection,['_id' => new \MongoDB\BSON\ObjectId($data['_id'])],[
+                    'attr_name' => $data['attr_name'],
+                    'attr_id' => new \MongoDB\BSON\ObjectId($data['attr_id']),        
+                    'point_name' => $data['point_name'],
+                    'details' => $data['details'],
+                    'audio_file_name' => $data['audio_file_name'],
+                    'image_file_name' => $data['image_file_name'],
+                    'updated_at' => $data['updated_at'],
+                    'status' => $data['status'],
+                    'user_id' => $data['user_id']
+                ])) {                       
                     
-                    //check image file is exist
-                    if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
-                        //write image file from file-input to folder
-                            if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$_FILES["image_file"]["name"]))
-                            {
-                                $dataRerun.="\nupload image file success!";
-                            }    
-                    }
                     //return json
                     return json_encode(['status' => 200, 'message' => 'success','data' => $dataRerun]);    
             }
@@ -275,7 +265,7 @@ class AttractionPointController extends BaseController{
                 '_id' => new \MongoDB\BSON\ObjectId($id)
             ]);
             //return json
-            return json_encode(['status' => 200, 'message' => 'Delete success','data' => $data]);
+            return json_encode(['status' => 200, 'message' => 'get data success','data' => $data]);
         }else{
             return json_encode(['status' => 401, 'message' => 'Unauthorized']);
         }

@@ -6,7 +6,7 @@ var image_file_type = '';
 const UpdateNewsComponent = {
     data() {
         return {
-            attr_id: '61d85e8f4a41313a64469802',
+            attr_id: '61d85ed74a41313a64469803',
             news: {
                 name: '',
                 details: '',
