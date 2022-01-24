@@ -44,6 +44,8 @@ $routes->get('/preview-news-video/(:segment)', 'NewsController::previewVideoView
 $routes->get('/preview-news-details/(:segment)', 'NewsController::previewNewsDetailsView/$1');
 $routes->get('/get-select-news/(:segment)', 'NewsController::getNewsDetailsByIdPublic/$1');
 $routes->get('/get-preview-video/(:segment)', 'VideoController::getVideoNotLogin/$1');
+//set type vr view
+$routes->get('/set-type-vr-view/(:segment)', 'TypeVRController::setCountTypeView/$1');
 
 $routes->group("admin", function($routes){
     $routes->get('/', 'AdminUserController::index');
@@ -56,12 +58,14 @@ $routes->group("admin", function($routes){
     $routes->get('preview', 'PreviewController::index');
     $routes->get('get-preview/(:segment1)/(:segment2)', 'PreviewController::getPointData/$1/$2');
     //route type vr
-    $routes->get('add-type-vr', 'VrController::setTypeVr');
-    $routes->post('add-type-vr-post', 'VrController::setTypeVrPost');
-    $routes->get('edit-type-vr', 'VrController::updateTypeVr');
-    $routes->post('edit-type-vr-post', 'VrController::updateTypeVrPost');
-    $routes->get('delete-type-vr/(:segment)', 'VrController::deleteTypeVr/$1');
-    $routes->get('get-all-type-vr', 'VrController::listAllTypeVr');
+    $routes->get('add-type-vr', 'TypeVRController::setTypeVr');
+    $routes->post('add-type-vr-post', 'TypeVRController::setTypeVrPost');
+    $routes->get('edit-type-vr', 'TypeVRController::updateTypeVr');
+    $routes->post('edit-type-vr-post', 'TypeVRController::updateTypeVrPost');
+    $routes->get('delete-type-vr/(:segment)', 'TypeVRController::deleteTypeVr/$1');
+    $routes->get('get-all-type-vr', 'TypeVRController::listAllTypeVr');
+    //route type vr count
+    $routes->get('get-type-vr-count/(:segment)', 'TypeVRController::getCountTypeView/$1');
     //route attraction
     $routes->get('add-attraction', 'AttractionController::setAttraction');
     $routes->post('add-attraction-post', 'AttractionController::setAttractionPost');

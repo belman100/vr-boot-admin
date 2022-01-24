@@ -5081,7 +5081,7 @@ code {
   border-image: none;
 }
 p.overflow-ellipsis {
-  width: 400px;
+  width: 200px;
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden;
@@ -5300,7 +5300,7 @@ table.table-mail tr td {
 .ibox-tools a {
   cursor: pointer;
   margin-left: 5px;
-  color: #c4c4c4 !important;
+  color: #ffffff !important;
 }
 .ibox-tools a.btn-primary {
   color: #fff !important;
@@ -5394,7 +5394,7 @@ table.table-mail tr td {
 /* login */
 .yellow-bg,
 .bg-login {
-  background: linear-gradient(0deg, rgba(27, 27, 27, 0.3), rgba(0, 0, 0, 0.3)), url(../img/Left\ Column.png) no-repeat;
+  background: linear-gradient(0deg, rgba(27, 27, 27, 0.3), rgba(0, 0, 0, 0.3)), url(../img/dd.png) no-repeat;
   background-size: cover;
   min-height: 300px;
   color: #ffffff;
@@ -5966,7 +5966,12 @@ a.close-canvas-menu:hover {
 }
 .img-lggg {
   max-width: 100%;
-  height: 520px;
+  height: 900px;
+}
+.img-news {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 30px;
 }
 .img-iconAA {
   max-width: 100%;

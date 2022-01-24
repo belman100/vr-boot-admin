@@ -27,11 +27,13 @@ const dasbord = {
             }],
             att_name_form: "",
             attraction_view: [],
+            vr_view: 0,
         }
     },
     mounted() {
         this.attractionAndHotspot();
         this.getListAttractionCount();
+        this.getVrTypeView();
         //this.getListNews();
     },
     methods: {
@@ -72,6 +74,20 @@ const dasbord = {
                     //console.log(this.attraction_view[0].attr_name);
                 } else {
                     this.attraction_view = [];
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        getVrTypeView() {
+            let url = '../admin/get-type-vr-count/' + this.type_id;
+            axios.get(url).then(response => {
+                console.log(response);
+                if (response.data.status == 200) {
+                    this.vr_view = response.data.type_view;
+                    //console.log(this.attraction_view[0].attr_name);
+                } else {
+                    this.vr_view = 0;
                 }
             }).catch(error => {
                 console.log(error);

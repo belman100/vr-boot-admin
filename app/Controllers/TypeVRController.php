@@ -1,7 +1,14 @@
 <?php
-namespace App\Con;
+namespace App\Controllers;
 
-use App\Model\TypeVRModel;
+use CodeIgniter\Controller;
+use CodeIgniter\HTTP\CLIRequest;
+use CodeIgniter\HTTP\IncomingRequest;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use App\Models\TypeVRModel;
+use App\Models\TypeCountViewModel;
 
 class TypeVRController extends BaseController
 {
@@ -111,7 +118,35 @@ class TypeVRController extends BaseController
             return json_encode(['status' => 401, 'message' => 'Unauthorized']);
         }
     }
-
+    //set count type vr view
+    public function setCountTypeView($id)
+    {        
+        $typecount = new TypeCountViewModel();   
+        $data = $typecount->createOne($typecount->collection, [
+            'type_id' => new \MongoDB\BSON\ObjectId($id),
+            'ip' => $this->request->getIPAddress(),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        if($data){
+            return json_encode(['status' => 200, 'message' => 'Insert success']);
+        }else{
+            return json_encode(['status' => 400, 'message' => 'Insert failed']);
+        }    
+    }
+    //get count type vr view
+    public function getCountTypeView($id)
+    {        
+        //check if user is already logged in
+        if (session()->get('is_login')) {
+            $typecount = new TypeCountViewModel();
+            $data = $typecount->getList($typecount->collection, ['type_id' => new \MongoDB\BSON\ObjectId($id)]);
+            //count type vr view and return    
+            return json_encode(['status' => 200, 'type_view' => count($data)]);
+        }else{
+            return json_encode(['status' => 401, 'message' => 'Unauthorized']);
+        }
+    }
 }   
        
 ?>

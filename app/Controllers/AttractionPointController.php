@@ -127,53 +127,50 @@ class AttractionPointController extends BaseController{
             $data['user_id'] = $session->get('user')->_id;
             
             $dataRerun="";
-                    //audio file
-                    if(!is_dir('resource/audio/')){
-                        mkdir('resource/audio/');
-                    }
-                    
-                    //get base64 audio file
-                    $audio_file_name = $data['audio_file_base64'];
-                    //check audio file is exist
-                    if($data['audio_file_name']!='' && $audio_file_name!=''){
-                        //remove old audio file
-                        if(file_exists('resource/audio/'.$data['audio_file_name'])){
-                            unlink('resource/audio/'.$data['audio_file_name']);
-                        }
-                        //create new audio file name using uniqid
-                        $file_name = uniqid().'.mp3';
-                        $data['audio_file_name'] = $file_name;
-                        //write audio file from base64 to folder
-                        $audio_file_name = $this->base64_to_jpeg($audio_file_name, 'resource/audio/'.$file_name);
-                        //var_dump($audio_file_name);
-                        //check audio file is exist
-                        if(file_exists($audio_file_name)){
-                            //var_dump("Uploaded");
-                            $dataRerun.="\n upload audio success";
-                        }
-                    } 
+            //audio file
+            if(!is_dir('resource/audio/')){
+                mkdir('resource/audio/');
+            }
+            
+            //get base64 audio file
+            $audio_file_name = $data['audio_file_base64'];
+            //check audio file is exist
+            if($data['audio_file_name']!='' && $audio_file_name!=''){
+                //remove old audio file
+                if(file_exists('resource/audio/'.$data['audio_file_name'])){
+                    unlink('resource/audio/'.$data['audio_file_name']);
+                }
+                //create new audio file name using uniqid
+                $file_name = uniqid().'.mp3';
+                $data['audio_file_name'] = $file_name;
+                //write audio file from base64 to folder
+                $audio_file_name = $this->base64_to_jpeg($audio_file_name, 'resource/audio/'.$file_name);
+                //var_dump($audio_file_name);
+                //check audio file is exist
+                if(file_exists($audio_file_name)){
+                    //var_dump("Uploaded");
+                    $dataRerun.="\n upload audio success";
+                }
+            } 
             //check image name is exist
             //image file
             if(!is_dir('resource/image/')){
                 mkdir('resource/image/');
-            }
-            if($data['image_file_pre_name']!='' && $_FILES["image_file"]["error"]==4){
-                //check old image file is exist
-                if(file_exists('resource/image/'.$data['image_file_pre_name'])){
-                    if(!unlink('resource/image/'.$data['image_file_pre_name'])){
-                        return json_encode(['status' => 400, 'message' => 'remove old image file failed!']);
-                    }
-                }    
-            }
+            }    
             //check image file is exist
-            if($data['image_file_name']!='' && $_FILES["image_file"]["error"]!=4){
+            if(!empty($_FILES["image_file"])){
                 //create new image file name using uniqid
                 $image_file_name = uniqid().'.'.pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION);
                 $data['image_file_name'] = $image_file_name;
                 //write image file from file-input to folder
                 if(move_uploaded_file($_FILES["image_file"]["tmp_name"],"resource/image/".$image_file_name))
                 {
-                    $dataRerun.="\nupload image file success!";
+                    if(file_exists('resource/image/'.$data['image_file_pre_name'])){
+                        if(!unlink('resource/image/'.$data['image_file_pre_name'])){
+                            return json_encode(['status' => 400, 'message' => 'remove old image file failed!']);
+                        }
+                    } 
+                    $dataRerun.="upload image file success!";
                 }    
             }
 
